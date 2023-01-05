@@ -1,9 +1,20 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
+import { client } from "./clientUtils";
 
 function App() {
 
+  useState(()=>{
+    client
+    .request("spawnActor", ["Jesus","InsultActor"])
+    .then((result) => console.log(result));
+    
+    client
+    .request("getNames", [])
+    .then((result) => console.log(result));
+  })
+  
   return (
     <div className="App">
       <div className="parent">
