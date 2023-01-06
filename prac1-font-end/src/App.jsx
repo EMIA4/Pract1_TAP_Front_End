@@ -7,37 +7,66 @@ function App() {
   const [actorArray, setActors] = useState([]); 
   const [actorRole, setActorRoleSelect] = useState('');
   const [inputName, setInputName] = useState('');
-
+  const [actualActor, setActualActor] = useState('');
+  const [textArea, setTextArea] = useState('');
   function addActor(){
     if(!inputName || !actorRole){
       alert("Error");
       return;
     }
-    
+    client
+    .request("spawnActor", [inputName,actorRole])
+    .then((result) => alert(result));
+  }
+  function actorEvents(){
+    console.log("Actor "+actualActor);
+    client
+    .request("actorEvents", [actualActor])
+    .then((result) => setTextArea(result));
+  }
+  function actorMessages(){
+    console.log("Actor "+actualActor);
+    client
+    .request("actorMessages", [actualActor])
+    .then((result) => setTextArea(result));
+  }
+  function monitorActor(){
+    client
+    .request("monitorActor", [actualActor])
+    .then((result) => alert(result));
   }
   useState(()=>{ 
-   /* client
-    .request("spawnActor", ["Jose","HelloWorldActor"])
-    .then((result) => console.log(result));*/
-    client
+   /*client
+   .request("monitorActor", ["a"])
+   .then((result) => console.log(result));
+   */
+   client
     .request("getNames", [])
-    .then((result) => setActors(result));
+    .then((result) => setActors(result))  
+    //console.log(actorArray)
+    //setTextArea(actorArray[0])
   })
 
   return (
     <div className="App">
       <div className="parent">
-        <div className="div1"><button className="colButton">Listar</button><button className="colButton">Monitorizar</button></div>
+        <div className="div1">
+          <button className="colButton" onClick={() => monitorActor()}>Monitorizar</button>
+          <button className="colButton" onClick={() => actorEvents()}>Events</button>
+          <button className="colButton" onClick={() => actorMessages()}>Messages</button>
+        </div>
         <div className="div2"><button className="colButton">Listar</button><button className="colButton">Monitorizar</button></div>
         <div className="div3">
-        <select readOnly={true} multiple={false} >
+        <h3>Actor List:</h3>
+        <select onChange={e => setActualActor(e.target.value)} readOnly={true} multiple={false} >
+        <option value='default'></option>
           {actorArray.map((actorName,index)=>(
             <option value={actorName} key={index}>{actorName}</option>
           ))}
         </select>
         </div>
         <div className="div4">
-          <textarea readOnly={true} name="textarea" rows="10" cols="50" value="">
+          <textarea readOnly={true} name="textarea" rows="10" cols="50" value={textArea}>
             Write something here
           </textarea>
         </div>
