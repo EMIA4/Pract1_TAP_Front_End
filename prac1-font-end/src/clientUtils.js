@@ -3,7 +3,7 @@ import { JSONRPCClient } from "json-rpc-2.0";
 // JSONRPCClient needs to know how to send a JSON-RPC request.
 // Tell it by passing a function to its constructor. The function must take a JSON-RPC request and send it.
 export const client = new JSONRPCClient((jsonRPCRequest) =>
-    fetch("http://localhost:8081/jsonrpc", {
+    fetch("http://localhost:8080/jsonrpc", {
         method: "POST",
         headers: {
             "content-type": "application/json",
@@ -26,7 +26,7 @@ export const client = new JSONRPCClient((jsonRPCRequest) =>
 // Use client.request to make a JSON-RPC request call.
 // The function returns a promise of the result.
 client
-    .request("spawnActor", ["Lara","InsultActor"])
+    .request("spawnActor", ["Lara","HelloWorldsActor"])
     .then((result) => console.log(result));
 
 client
