@@ -25,7 +25,7 @@ export const client = new JSONRPCClient((jsonRPCRequest) =>
 
 // Use client.request to make a JSON-RPC request call.
 // The function returns a promise of the result.
-client
+/*client
     .request("spawnActor", ["Lara","HelloWorldsActor"])
     .then((result) => console.log(result));
 

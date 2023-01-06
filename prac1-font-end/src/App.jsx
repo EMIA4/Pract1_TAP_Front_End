@@ -6,20 +6,24 @@ import { client } from "./clientUtils";
 function App() {
   const [actorArray, setActors] = useState([]); 
   const [actorRole, setActorRoleSelect] = useState('');
+  const [inputName, setInputName] = useState('');
 
-  function onChangeValue(event) {
-    console.log(event.target.value);
+  function addActor(){
+    if(!inputName || !actorRole){
+      alert("Error");
+      return;
+    }
     
-  };
+  }
   useState(()=>{ 
-    client
+   /* client
     .request("spawnActor", ["Jose","HelloWorldActor"])
-    .then((result) => console.log(result));
+    .then((result) => console.log(result));*/
     client
     .request("getNames", [])
     .then((result) => setActors(result));
   })
-  
+
   return (
     <div className="App">
       <div className="parent">
@@ -41,12 +45,12 @@ function App() {
       <div>
       <p>Add Actor:</p>
       <form>
-      <input type="text" placeholder="Actor Name.." name="search" />
-      <div onChange={onChangeValue}>
+      <input type="text" placeholder="Actor Name.." name="search" onInput={e => setInputName(e.target.value)}/>
+      <div onChange={e=> setActorRoleSelect(e.target.value)}>
         <input type="radio" value="HelloWorldActor" name="rol"/> HelloWorldActor
         <input type="radio" value="InsultActor" name="rol"/> InsultActor
       </div>
-      <button type="submit">Agregar<i className="fa fa-search"></i></button>  
+      <button  onClick={() =>addActor()}>Agregar<i className="fa fa-search"></i></button>  
     </form>
     </div>
     </div>
