@@ -9,7 +9,9 @@ function App() {
   const [inputName, setInputName] = useState('');
   const [actualActor, setActualActor] = useState('');
   const [textArea, setTextArea] = useState('');
-  const [isRingRunning,setisRingRunning] = useState(false)
+  const updateBar = () => {
+    return new Promise(r => setTimeout(setProgresState(getNVueltas), 50))
+}
   function addActor(){
     if(!inputName || !actorRole){
       alert("Error");
@@ -27,7 +29,7 @@ function App() {
   function startRingActor(){
     client
     .request("startRingApp", [])
-    .then((result) => setisRingRunning(true));
+    .then((result) => console.log("Hola"));
   }
   function actorEvents(){
     console.log("Actor "+actualActor);
@@ -47,25 +49,25 @@ function App() {
     .then((result) => alert(result));
   }
   useEffect(() => {
-    const interval = setInterval(()=>{
-      if ((progresState < 100)) {
-        if(isRingRunning){
-        setTimeout(getNVueltas, 3000)
-        }
-      }else{
-        setisRingRunning(false)
-        setProgresState(0)
-        window.location.reload(); 
-      }
-  },[2000])
     //const updateProgress = () => setProgresState(progresState+1)
-    
-  }, [progresState,isRingRunning])
+    if (progresState < 100) {
+      setTimeout(getNVueltas, 3000)
+      //setProgresState(0)
+    }else{
+      setProgresState(0)
+    }
+  }, [progresState])
 
   useState(()=>{ 
+   /*client
+   .request("monitorActor", ["a"])
+   .then((result) => console.log(result));
+   */
    client
     .request("getNames", [])
     .then((result) => setActors(result))  
+    //console.log(actorArray)
+    //setTextArea(actorArray[0])
   })
 
   return (
@@ -94,7 +96,6 @@ function App() {
           </textarea>
         </div>
       </div>
-      <h3>Ring Actor Progres:</h3>
       <Progressbar bgcolor="#ff00ff" progress= {progresState}  height={30} />
       <div>
       <p>Add Actor:</p>
@@ -111,5 +112,3 @@ function App() {
     
   );
 }
-
-export default App;

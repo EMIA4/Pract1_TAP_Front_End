@@ -5,11 +5,13 @@ import { client } from "./clientUtils";
 function App() {
   const [actorArray, setActors] = useState([]); 
   const [actorRole, setActorRoleSelect] = useState('');
-  const [progresState, setProgresState] = useState(0);
+  const [progresState, setProgresState] = useState('0');
   const [inputName, setInputName] = useState('');
   const [actualActor, setActualActor] = useState('');
   const [textArea, setTextArea] = useState('');
-  const [isRingRunning,setisRingRunning] = useState(false)
+  const updateBar = () => {
+    return new Promise(r => setTimeout(setProgresState(getNVueltas), 50))
+}
   function addActor(){
     if(!inputName || !actorRole){
       alert("Error");
@@ -27,7 +29,7 @@ function App() {
   function startRingActor(){
     client
     .request("startRingApp", [])
-    .then((result) => setisRingRunning(true));
+    .then((result) => console.log("Hola"));
   }
   function actorEvents(){
     console.log("Actor "+actualActor);
@@ -46,26 +48,25 @@ function App() {
     .request("monitorActor", [actualActor])
     .then((result) => alert(result));
   }
-  useEffect(() => {
+  useEffect(()=>{
     const interval = setInterval(()=>{
-      if ((progresState < 100)) {
-        if(isRingRunning){
-        setTimeout(getNVueltas, 3000)
+        getNVueltas();
+        if(progresState === 1){
+          clearInterval(interval)
+          progresState(0)
         }
-      }else{
-        setisRingRunning(false)
-        setProgresState(0)
-        window.location.reload(); 
-      }
-  },[2000])
-    //const updateProgress = () => setProgresState(progresState+1)
-    
-  }, [progresState,isRingRunning])
-
+    },[5000])
+  },[])
   useState(()=>{ 
+   /*client
+   .request("monitorActor", ["a"])
+   .then((result) => console.log(result));
+   */
    client
     .request("getNames", [])
     .then((result) => setActors(result))  
+    //console.log(actorArray)
+    //setTextArea(actorArray[0])
   })
 
   return (
@@ -94,7 +95,6 @@ function App() {
           </textarea>
         </div>
       </div>
-      <h3>Ring Actor Progres:</h3>
       <Progressbar bgcolor="#ff00ff" progress= {progresState}  height={30} />
       <div>
       <p>Add Actor:</p>
@@ -112,4 +112,3 @@ function App() {
   );
 }
 
-export default App;
