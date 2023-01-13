@@ -1,11 +1,12 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
+import Progressbar from './Progress_bar';
 import "./App.css";
 import { client } from "./clientUtils";
-
+import{ Animated} from "react-native"
 function App() {
   const [actorArray, setActors] = useState([]); 
   const [actorRole, setActorRoleSelect] = useState('');
+  const [progresState, setProgresState] = useState('0');
   const [inputName, setInputName] = useState('');
   const [actualActor, setActualActor] = useState('');
   const [textArea, setTextArea] = useState('');
@@ -17,6 +18,16 @@ function App() {
     client
     .request("spawnActor", [inputName,actorRole])
     .then((result) => alert(result));
+  }
+  function getNVueltas(){
+    client
+    .request("getVueltas", [])
+    .then((result) => alert(result));
+  }
+  function startRingActor(){
+    client
+    .request("startRingApp", [])
+    .then((result) => setInterval(getNVueltas(), 1000));
   }
   function actorEvents(){
     console.log("Actor "+actualActor);
@@ -55,7 +66,9 @@ function App() {
           <button className="colButton" onClick={() => actorEvents()}>Events</button>
           <button className="colButton" onClick={() => actorMessages()}>Messages</button>
         </div>
-        <div className="div2"><button className="colButton">Listar</button><button className="colButton">Monitorizar</button></div>
+        <div className="div2">
+          <button className="colButton"  onClick={() => startRingActor()}>RingActor</button>
+          <button className="colButton">Monitorizar</button></div>
         <div className="div3">
         <h3>Actor List:</h3>
         <select onChange={e => setActualActor(e.target.value)} readOnly={true} multiple={false} >
@@ -71,6 +84,7 @@ function App() {
           </textarea>
         </div>
       </div>
+      <Progressbar bgcolor="#ff00ff" progress= {progresState}  height={30} />
       <div>
       <p>Add Actor:</p>
       <form>
